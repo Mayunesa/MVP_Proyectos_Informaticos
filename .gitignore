@@ -8,6 +8,9 @@ logs
 *.log
 npm-debug.log*
 
+# Build
+/backend/dist/
+
 # Entorno
 .env
 .env.local
