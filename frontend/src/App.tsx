@@ -1,3 +1,5 @@
+//src/App.tsx
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/Home';
 import Dashboard from './pages/Dashboard';
@@ -6,6 +8,7 @@ import EventsList from './pages/EventsList';
 import ProveedoresList from './pages/ProveedoresList';
 import ProveedorForm from './pages/ProveedorForm';
 import { globalStyles } from './styles/Global';
+import Calendario from './pages/Calendario';
 
 function App() {
   return (
@@ -14,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/calendario" element={<Calendario />} />
           <Route path="/eventos" element={<EventsList />} />
           <Route path="/eventos/crear" element={<EventForm />} />
           <Route path="/eventos/:id" element={<EventForm />} />

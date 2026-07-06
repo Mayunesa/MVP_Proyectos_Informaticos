@@ -1,3 +1,5 @@
+//src/styles/components/activityFeed_styles.ts
+
 import type { CSSProperties } from 'react';
 import { colors, spacing, typography, radii, shadows } from '../Global';
 
