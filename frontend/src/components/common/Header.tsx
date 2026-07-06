@@ -2,14 +2,14 @@
 
 import type { FC, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, LayoutDashboard, PartyPopper, Wallet, FileText, CalendarDays } from 'lucide-react';
+import { Home, LayoutDashboard, PartyPopper, Building2, FileText, CalendarDays } from 'lucide-react';
 import { headerStyles, navLinkHoverBg } from '../../styles/components/header_styles';
 
 const navItems = [
   { path: '/', label: 'Inicio', icon: Home },
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/eventos', label: 'Eventos', icon: PartyPopper },
-  { path: '/pagos', label: 'Pagos', icon: Wallet },
+  { path: '/proveedores', label: 'Proveedores', icon: Building2 },
   { path: '/contratos', label: 'Contratos', icon: FileText },
   { path: '/calendario', label: 'Calendario', icon: CalendarDays },
 ];
@@ -21,7 +21,6 @@ const Header: FC = () => {
     <header style={headerStyles.header}>
       <div style={headerStyles.container}>
         <div style={headerStyles.logoContainer}>
-          <img src="/logo-prisma.png" alt="Prisma" style={headerStyles.logoImage} />
           <h1 style={headerStyles.title}>PRISMA</h1>
         </div>
 

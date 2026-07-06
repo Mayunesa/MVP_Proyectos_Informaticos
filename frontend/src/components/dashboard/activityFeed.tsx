@@ -1,3 +1,5 @@
+//src/components/dashboard/activityFeed.tsx
+
 import type { FC } from 'react';
 import { activityFeedStyles } from '../../styles/components/activityFeed_styles';
 import type { ActividadReciente } from '../../types/dashboard.types';

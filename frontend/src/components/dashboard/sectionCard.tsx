@@ -1,6 +1,9 @@
+//src/components/dashboard/sectionCard.tsx
+
 import type { FC, ReactNode } from 'react';
 import { sectionCardStyles, toneColors } from '../../styles/components/sectionCard_styles';
-import type { Tono } from '../../types/dashboard.types';
+import DonutChart from './donutChart';
+import type { DonutSegment, Tono } from '../../types/dashboard.types';
 
 export interface SectionCardItem {
   id: string;
@@ -12,11 +15,12 @@ export interface SectionCardItem {
 interface SectionCardProps {
   title: string;
   items: SectionCardItem[];
+  segmentosDona?: DonutSegment[];
   emptyText?: string;
   headerAction?: ReactNode;
 }
 
-const SectionCard: FC<SectionCardProps> = ({ title, items, emptyText = 'Sin registros por ahora', headerAction }) => {
+const SectionCard: FC<SectionCardProps> = ({ title, items, segmentosDona, emptyText = 'Sin registros por ahora', headerAction }) => {
   return (
     <div style={sectionCardStyles.card}>
       <div style={sectionCardStyles.header}>
@@ -26,6 +30,9 @@ const SectionCard: FC<SectionCardProps> = ({ title, items, emptyText = 'Sin regi
         </div>
         {headerAction}
       </div>
+
+      {segmentosDona && segmentosDona.length > 0 && <DonutChart segmentos={segmentosDona} />}
+
       <ul style={sectionCardStyles.list}>
         {items.length === 0 && <li style={sectionCardStyles.empty}>{emptyText}</li>}
         {items.map((item) => (

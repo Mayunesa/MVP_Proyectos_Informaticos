@@ -1,3 +1,5 @@
+//src/styles/Global.ts
+
 import type { CSSProperties } from 'react';
 
 export const colors = {
