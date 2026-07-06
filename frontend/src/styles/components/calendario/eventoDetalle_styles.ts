@@ -110,4 +110,15 @@ export const eventoDetalleStyles: Record<string, CSSProperties> = {
     color: colors.textSecondary,
     fontStyle: 'italic',
   },
+  botonPagar: {
+    fontFamily: typography.fontFamily,
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.semibold,
+    color: colors.white,
+    backgroundColor: colors.success,
+    border: 'none',
+    borderRadius: radii.sm,
+    padding: `0.125rem ${spacing.sm}`,
+    cursor: 'pointer',
+  },
 };

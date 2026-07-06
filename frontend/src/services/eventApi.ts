@@ -92,6 +92,12 @@ export const createEventProvider = (data: EventoProveedor): Promise<EventoProvee
     body: JSON.stringify(data),
   });
 
+export const updateEventProvider = (id: string, data: Partial<EventoProveedor>): Promise<EventoProveedor> =>
+  request<EventoProveedor>(`${EVENTO_PROVEEDOR_URL}/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
 export const deleteEventProvider = (id: string): Promise<void> =>
   request<void>(`${EVENTO_PROVEEDOR_URL}/${id}`, {
     method: 'DELETE',

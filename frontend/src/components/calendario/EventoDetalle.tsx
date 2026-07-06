@@ -9,11 +9,12 @@ interface EventoDetalleProps {
   evento: EventoDetalleCompleto | null;
   cargando: boolean;
   onEditar?: (id: string) => void;
+  onPagarProveedor?: (proveedorId: string) => void;
 }
 
 const formatoCLP = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' });
 
-const EventoDetalle: FC<EventoDetalleProps> = ({ evento, cargando, onEditar }) => {
+const EventoDetalle: FC<EventoDetalleProps> = ({ evento, cargando, onEditar, onPagarProveedor }) => {
   if (cargando) {
     return <div style={eventoDetalleStyles.vacio}>Cargando detalle del evento...</div>;
   }
@@ -59,12 +60,10 @@ const EventoDetalle: FC<EventoDetalleProps> = ({ evento, cargando, onEditar }) =
         <span style={eventoDetalleStyles.etiqueta}>Costo real</span>
         <span style={eventoDetalleStyles.valor}>{formatoCLP.format(evento.costoTotalReal)}</span>
       </div>
-      {evento.anticipoPagado !== null && (
-        <div style={eventoDetalleStyles.filaDato}>
-          <span style={eventoDetalleStyles.etiqueta}>Anticipo pagado</span>
-          <span style={eventoDetalleStyles.valor}>{formatoCLP.format(evento.anticipoPagado)}</span>
-        </div>
-      )}
+      <div style={eventoDetalleStyles.filaDato}>
+        <span style={eventoDetalleStyles.etiqueta}>Anticipo pagado</span>
+        <span style={eventoDetalleStyles.valor}>{formatoCLP.format(evento.anticipoPagado)}</span>
+      </div>
 
       <h4 style={eventoDetalleStyles.subtitulo}>Proveedores asociados</h4>
       <ul style={eventoDetalleStyles.listaProveedores}>
@@ -76,6 +75,15 @@ const EventoDetalle: FC<EventoDetalleProps> = ({ evento, cargando, onEditar }) =
             <span style={eventoDetalleStyles.proveedorNombre}>{proveedor.nombreProveedor}</span>
             <span style={eventoDetalleStyles.proveedorServicio}>{proveedor.servicioAcordado}</span>
             <span style={eventoDetalleStyles.proveedorEstado}>{proveedor.estadoReserva}</span>
+            {onPagarProveedor && proveedor.estadoReserva !== 'Pagado' && (
+              <button
+                type="button"
+                style={eventoDetalleStyles.botonPagar}
+                onClick={() => onPagarProveedor(proveedor.id)}
+              >
+                Pagar
+              </button>
+            )}
           </li>
         ))}
       </ul>

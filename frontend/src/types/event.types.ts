@@ -16,6 +16,7 @@ export interface CreateEventoDTO {
 
 export interface Evento extends CreateEventoDTO {
   id: string;
+  created_at?: string;
 }
 
 export type EventoFormData = CreateEventoDTO;

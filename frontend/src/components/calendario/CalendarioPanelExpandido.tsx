@@ -16,11 +16,12 @@ interface CalendarioPanelExpandidoProps {
   onSeleccionarEvento: (id: string) => void;
   onCrearEvento?: (fecha: string) => void;
   onEditarEvento?: (id: string) => void;
+  onPagarProveedor?: (proveedorId: string) => void;
 }
 
 const CalendarioPanelExpandido: FC<CalendarioPanelExpandidoProps> = ({
   fecha, eventos, eventoSeleccionadoId, detalleEvento, cargandoDetalle,
-  onSeleccionarEvento, onCrearEvento, onEditarEvento,
+  onSeleccionarEvento, onCrearEvento, onEditarEvento, onPagarProveedor,
 }) => (
   <div style={calendarioPanelExpandidoStyles.contenedor}>
     <div style={calendarioPanelExpandidoStyles.columnaLista}>
@@ -46,7 +47,7 @@ const CalendarioPanelExpandido: FC<CalendarioPanelExpandidoProps> = ({
       )}
     </div>
     <div style={calendarioPanelExpandidoStyles.columnaDetalle}>
-      <EventoDetalle evento={detalleEvento} cargando={cargandoDetalle} onEditar={onEditarEvento} />
+      <EventoDetalle evento={detalleEvento} cargando={cargandoDetalle} onEditar={onEditarEvento} onPagarProveedor={onPagarProveedor} />
     </div>
   </div>
 );
