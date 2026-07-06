@@ -21,7 +21,6 @@ const Header: FC = () => {
     <header style={headerStyles.header}>
       <div style={headerStyles.container}>
         <div style={headerStyles.logoContainer}>
-          <img src="/logo-prisma.png" alt="Prisma" style={headerStyles.logoImage} />
           <h1 style={headerStyles.title}>PRISMA</h1>
         </div>
 
