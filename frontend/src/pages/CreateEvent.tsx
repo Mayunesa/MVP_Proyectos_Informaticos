@@ -124,7 +124,14 @@ const EventForm = () => {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      const payload = { ...formData, estado: firmado ? 'Confirmado' as const : 'Cotizacion' as const };
+      const costoCalculado = selectedProviders
+        .filter(p => p.id_proveedor)
+        .reduce((sum, p) => sum + (p.costo_acordado || 0), 0);
+      const payload = {
+        ...formData,
+        estado: firmado ? 'Confirmado' as const : 'Cotizacion' as const,
+        costo_total_real: costoCalculado,
+      };
       const evento = isEdit && id
         ? await updateEvent(id, payload)
         : await createEvent(payload);

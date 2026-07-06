@@ -1,6 +1,7 @@
 //src/pages/Calendario.tsx
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import CalendarioNavegacion from '../components/calendario/CalendarioNavegacion';
 import CalendarioGrid from '../components/calendario/CalendarioGrid';
@@ -9,61 +10,80 @@ import { calendarioStyles } from '../styles/pages/Calendario_styles';
 import { generarDiasDelMes } from '../utils/calendario';
 import { agruparEventosPorFecha } from '../utils/agruparEventosPorFecha';
 import type { EventoCalendario, EventoDetalleCompleto } from '../types/calendario.types';
-
-// Mock de filas de "eventos". TODO: reemplazar por select real:
-// select id, nombre_evento, tipo_evento, fecha_evento, hora_evento, estado
-// from eventos where fecha_evento between :inicioMesVisible and :finMesVisible
-const eventosMock: EventoCalendario[] = [
-  { id: '1', nombreEvento: 'Boda Fuentes - Rojas', tipoEvento: 'Matrimonio', fechaEvento: '2026-07-18', horaEvento: '18:00', estado: 'Confirmado' },
-  { id: '2', nombreEvento: 'Aniversario ACME', tipoEvento: 'Corporativo', fechaEvento: '2026-07-18', horaEvento: '20:30', estado: 'Confirmado' },
-  { id: '3', nombreEvento: 'Lanzamiento Nova', tipoEvento: 'Corporativo', fechaEvento: '2026-07-25', horaEvento: '19:00', estado: 'Confirmado' },
-  { id: '8', nombreEvento: 'Seminario Fintech', tipoEvento: 'Corporativo', fechaEvento: '2026-07-01', horaEvento: '09:00', estado: 'Ejecucion' },
-];
-
-// Mock del detalle completo (join eventos + contratos_cliente + evento_proveedor + proveedores).
-// TODO: reemplazar por consulta real al hacer clic en un evento, usando su id.
-const detalleMock: Record<string, EventoDetalleCompleto> = {
-  '1': {
-    id: '1', nombreEvento: 'Boda Fuentes - Rojas', tipoEvento: 'Matrimonio', fechaEvento: '2026-07-18',
-    horaEvento: '18:00', estado: 'Confirmado', presupuestoTotal: 8500000, costoTotalReal: 7200000,
-    anticipoPagado: 4250000,
-    proveedoresAsociados: [
-      { id: 'p1', nombreProveedor: 'Banquetería Don Sabor', categoria: 'Banquetería', servicioAcordado: 'Servicio de banquetería', costoAcordado: 3200000, estadoReserva: 'Pagado' },
-      { id: 'p2', nombreProveedor: 'Florería Bellaflor', categoria: 'Decoración', servicioAcordado: 'Decoración floral', costoAcordado: 900000, estadoReserva: 'Reservado' },
-    ],
-  },
-  '2': {
-    id: '2', nombreEvento: 'Aniversario ACME', tipoEvento: 'Corporativo', fechaEvento: '2026-07-18',
-    horaEvento: '20:30', estado: 'Confirmado', presupuestoTotal: 5000000, costoTotalReal: 4100000,
-    anticipoPagado: 2500000,
-    proveedoresAsociados: [
-      { id: 'p3', nombreProveedor: 'Iluminación Total', categoria: 'Iluminación', servicioAcordado: 'Set de iluminación', costoAcordado: 600000, estadoReserva: 'Reservado' },
-    ],
-  },
-  '3': {
-    id: '3', nombreEvento: 'Lanzamiento Nova', tipoEvento: 'Corporativo', fechaEvento: '2026-07-25',
-    horaEvento: '19:00', estado: 'Confirmado', presupuestoTotal: 6200000, costoTotalReal: 0,
-    anticipoPagado: 3100000, proveedoresAsociados: [],
-  },
-  '8': {
-    id: '8', nombreEvento: 'Seminario Fintech', tipoEvento: 'Corporativo', fechaEvento: '2026-07-01',
-    horaEvento: '09:00', estado: 'Ejecucion', presupuestoTotal: 3000000, costoTotalReal: 2950000,
-    anticipoPagado: null, proveedoresAsociados: [],
-  },
-};
+import type { EstadoReservaProveedor } from '../types/dashboard.types';
+import { getEvents, getEventById, getEventProviders, getProviders } from '../services/eventApi';
 
 const Calendario = () => {
+  const navigate = useNavigate();
   const hoy = new Date();
   const [anio, setAnio] = useState(hoy.getFullYear());
   const [mes, setMes] = useState(hoy.getMonth());
   const [fechaSeleccionada, setFechaSeleccionada] = useState<string | null>(null);
   const [eventoSeleccionadoId, setEventoSeleccionadoId] = useState<string | null>(null);
+  const [eventos, setEventos] = useState<EventoCalendario[]>([]);
+  const [detalleEvento, setDetalleEvento] = useState<EventoDetalleCompleto | null>(null);
+  const [cargandoDetalle, setCargandoDetalle] = useState(false);
+
+  useEffect(() => {
+    getEvents().then(data => {
+      setEventos(
+        data.map(e => ({
+          id: e.id,
+          nombreEvento: e.nombre_evento,
+          tipoEvento: e.tipo_evento as EventoCalendario['tipoEvento'],
+          fechaEvento: e.fecha_evento,
+          horaEvento: '',
+          estado: e.estado as EventoCalendario['estado'],
+        }))
+      );
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!eventoSeleccionadoId) {
+      setDetalleEvento(null);
+      return;
+    }
+    setCargandoDetalle(true);
+    Promise.all([
+      getEventById(eventoSeleccionadoId),
+      getEventProviders(),
+      getProviders(),
+    ])
+      .then(([evento, eps, proveedores]) => {
+        const ep = eps.filter(e => e.id_evento === eventoSeleccionadoId);
+        const proveedoresAsociados = ep.map(epp => {
+          const prov = proveedores.find(p => p.id === epp.id_proveedor);
+          return {
+            id: epp.id ?? epp.id_proveedor,
+            nombreProveedor: prov?.nombre_empresa ?? epp.id_proveedor,
+            categoria: prov?.categoria ?? '',
+            servicioAcordado: epp.servicio_acordado,
+            costoAcordado: epp.costo_acordado,
+            estadoReserva: (epp.estado_reserva ?? 'Pendiente') as EstadoReservaProveedor,
+          };
+        });
+        setDetalleEvento({
+          id: evento.id,
+          nombreEvento: evento.nombre_evento,
+          tipoEvento: evento.tipo_evento as EventoCalendario['tipoEvento'],
+          fechaEvento: evento.fecha_evento,
+          horaEvento: '',
+          estado: evento.estado as EventoCalendario['estado'],
+          presupuestoTotal: evento.presupuesto_total,
+          costoTotalReal: evento.costo_total_real ?? 0,
+          anticipoPagado: null,
+          proveedoresAsociados,
+        });
+      })
+      .catch(() => setDetalleEvento(null))
+      .finally(() => setCargandoDetalle(false));
+  }, [eventoSeleccionadoId]);
 
   const dias = useMemo(() => generarDiasDelMes(anio, mes), [anio, mes]);
-  const eventosPorFecha = useMemo(() => agruparEventosPorFecha(eventosMock), []);
+  const eventosPorFecha = useMemo(() => agruparEventosPorFecha(eventos), [eventos]);
 
   const eventosDelDiaSeleccionado = fechaSeleccionada ? eventosPorFecha.get(fechaSeleccionada) ?? [] : [];
-  const detalleEvento = eventoSeleccionadoId ? detalleMock[eventoSeleccionadoId] ?? null : null;
 
   const cambiarMes = (delta: number) => {
     const nuevaFecha = new Date(anio, mes + delta, 1);
@@ -76,6 +96,14 @@ const Calendario = () => {
   const seleccionarFecha = (fecha: string) => {
     setFechaSeleccionada(fecha === fechaSeleccionada ? null : fecha);
     setEventoSeleccionadoId(null);
+  };
+
+  const handleCrearEvento = (fecha: string) => {
+    navigate(`/eventos/crear?fecha=${fecha}`);
+  };
+
+  const handleEditarEvento = (id: string) => {
+    navigate(`/eventos/${id}`);
   };
 
   return (
@@ -104,8 +132,10 @@ const Calendario = () => {
             eventos={eventosDelDiaSeleccionado}
             eventoSeleccionadoId={eventoSeleccionadoId}
             detalleEvento={detalleEvento}
-            cargandoDetalle={false}
+            cargandoDetalle={cargandoDetalle}
             onSeleccionarEvento={(id) => setEventoSeleccionadoId(id === eventoSeleccionadoId ? null : id)}
+            onCrearEvento={handleCrearEvento}
+            onEditarEvento={handleEditarEvento}
           />
         )}
       </main>

@@ -23,8 +23,8 @@ const CalendarioDiaCelda: FC<CalendarioDiaCeldaProps> = ({ dia, cantidadEventos,
         ...(dia.esHoy ? calendarioDiaCeldaStyles.hoy : {}),
         ...(seleccionado ? calendarioDiaCeldaStyles.seleccionada : {}),
       }}
-      onClick={() => tieneEventos && onSeleccionar(dia.fecha)}
-      disabled={!tieneEventos}
+      onClick={() => onSeleccionar(dia.fecha)}
+      disabled={false}
     >
       <span style={calendarioDiaCeldaStyles.numero}>{dia.numeroDia}</span>
       {tieneEventos && <span style={calendarioDiaCeldaStyles.indicador}>{cantidadEventos}</span>}
