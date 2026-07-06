@@ -12,6 +12,8 @@ export const sectionCardStyles: Record<string, CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     gap: spacing.md,
+    flex: '1 1 20rem',
+    maxWidth: '28rem',
   },
   header: {
     display: 'flex',

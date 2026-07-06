@@ -64,13 +64,17 @@ const Calendario = () => {
     if (duracionTotal <= 0) return Math.round(evento.presupuesto_total * minimo * 100) / 100;
     const fechaHito25 = new Date(fechaReservacion.getTime() + duracionTotal * 0.25);
     const fechaHito50 = new Date(fechaReservacion.getTime() + duracionTotal * 0.5);
+    const fechaHito75 = new Date(fechaReservacion.getTime() + duracionTotal * 0.75);
     const pago25 = nearest15th(fechaHito25);
     const pago50 = nearest15th(fechaHito50);
+    const pago75 = nearest15th(fechaHito75);
     let porcentaje: number;
-    if (fechaCancelacion >= pago50) {
+    if (fechaCancelacion >= pago75) {
       porcentaje = 1;
-    } else if (fechaCancelacion >= pago25) {
+    } else if (fechaCancelacion >= pago50) {
       porcentaje = 0.75;
+    } else if (fechaCancelacion >= pago25) {
+    porcentaje = 0.5;
     } else {
       porcentaje = minimo;
     }

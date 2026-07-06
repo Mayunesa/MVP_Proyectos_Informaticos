@@ -1,3 +1,5 @@
+//frontend/src/pages/EventsList.tsx
+
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
@@ -6,6 +8,7 @@ import { eventsListStyles as s } from '../styles/pages/EventsList_styles';
 import type { Evento } from '../types/event.types';
 import { getEvents, deleteEvent } from '../services/eventApi';
 import { colors } from '../styles/Global';
+import { estadoEventoLabels } from '../utils/estadoEvento';
 
 const estadoColors: Record<string, { bg: string; text: string }> = {
   Cotizacion: { bg: '#EEF2FF', text: '#4F46E5' },

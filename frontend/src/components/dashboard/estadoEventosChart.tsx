@@ -6,6 +6,7 @@ import { estadoEventosChartStyles } from '../../styles/components/estadoEventosC
 interface BarDatum {
   estado: string;
   cantidad: number;
+  etiqueta: string;
   color: string;
 }
 
@@ -30,7 +31,8 @@ const EstadoEventosChart: FC<EstadoEventosChartProps> = ({ datos }) => {
                 backgroundColor: d.color,
               }}
             />
-            <span style={estadoEventosChartStyles.barLabel}>{d.estado}</span>
+            {/* <span style={estadoEventosChartStyles.barLabel}>{d.estado}</span> */}
+            <span style={estadoEventosChartStyles.barLabel}>{d.etiqueta}</span>
           </div>
         ))}
       </div>

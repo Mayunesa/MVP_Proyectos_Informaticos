@@ -1,9 +1,12 @@
+//frontend/src/pages/CreateEvent.tsx
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import Header from '../components/common/Header';
 import { createEventStyles as s } from '../styles/pages/CreateEvent_styles';
 import { colors, spacing, radii, typography } from '../styles/Global';
+import { estadoEventoOptions } from '../utils/estadoEvento';
 import type {
   EventoFormData, Proveedor,
   EventoProveedorFormData, ContratoClienteFormData,
@@ -19,6 +22,7 @@ const emptyEvent: EventoFormData = {
   tipo_evento: 'Corporativo',
   fecha_evento: '',
   presupuesto_total: 0,
+  estado: 'Cotizacion',
 };
 
 const emptyProviderRow: EventoProveedorFormData = {
@@ -60,6 +64,7 @@ const EventForm = () => {
           tipo_evento: evento.tipo_evento,
           fecha_evento: evento.fecha_evento,
           presupuesto_total: evento.presupuesto_total,
+          estado: evento.estado,
         });
         setSelectedProviders(
           eps.filter(ep => ep.id_evento === id).map(ep => ({
@@ -90,7 +95,7 @@ const EventForm = () => {
   };
 
   const [emailCliente, setEmailCliente] = useState('');
-  const [firmado, setFirmado] = useState(false);
+  //const [firmado, setFirmado] = useState(false);
 
   const addProviderRow = () => {
     setSelectedProviders(prev => [...prev, { ...emptyProviderRow }]);
@@ -129,7 +134,7 @@ const EventForm = () => {
         .reduce((sum, p) => sum + (p.costo_acordado || 0), 0);
       const payload = {
         ...formData,
-        estado: firmado ? 'Confirmado' as const : 'Cotizacion' as const,
+        //estado: firmado ? 'Confirmado' as const : 'Cotizacion' as const,
         costo_total_real: costoCalculado,
       };
       const evento = isEdit && id
@@ -209,7 +214,7 @@ const EventForm = () => {
                 placeholder="Ej: Boda de María y Juan" />
               {errors.nombre_evento && <span style={s.errorText}>{errors.nombre_evento}</span>}
             </div>
-            <div style={s.fieldGroup}>
+            <div style={s.fieldGroup}> 
               <label style={s.label}>Tipo de Evento *</label>
               <select style={s.select} value={formData.tipo_evento}
                 onChange={e => handleChange('tipo_evento', e.target.value)}>
@@ -217,6 +222,16 @@ const EventForm = () => {
                 <option value="Social">Social</option>
                 <option value="Matrimonio">Matrimonio</option>
                 <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <div style={s.fieldGroup}>
+              <label style={s.label}>Estado del Evento *</label>
+              <select style={s.select} value={formData.estado}
+                onChange={e => handleChange('estado', e.target.value)}>
+                {estadoEventoOptions.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -373,12 +388,12 @@ const EventForm = () => {
                     </select>
                   </div>
                 </div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: spacing.sm, cursor: 'pointer', fontFamily: typography.fontFamily, fontSize: typography.sizes.base }}>
+                {/* <label style={{ display: 'flex', alignItems: 'center', gap: spacing.sm, cursor: 'pointer', fontFamily: typography.fontFamily, fontSize: typography.sizes.base }}>
                   <input type="checkbox" checked={firmado}
                     onChange={e => setFirmado(e.target.checked)}
                     style={{ width: '1.125rem', height: '1.125rem', cursor: 'pointer' }} />
                   Firmado
-                </label>
+                </label> */}
                 <button type="button" style={{
                   display: 'flex', alignItems: 'center', gap: spacing.xs, padding: `${spacing.xs} ${spacing.md}`,
                   background: 'none', border: `1px solid ${colors.danger}`, borderRadius: radii.sm,

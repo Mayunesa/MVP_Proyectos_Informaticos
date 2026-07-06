@@ -35,7 +35,8 @@ export const estadoEventosChartStyles: Record<string, CSSProperties> = {
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     gap: spacing.md,
-    height: '10rem',
+    //height: '10rem',
+    height: 'clamp(8rem, 22vw, 12rem)',
   },
   barGroup: {
     display: 'flex',

@@ -1,8 +1,11 @@
+//frontend/src/types/event.types.ts
+
 export type TipoEvento = 'Matrimonio' | 'Corporativo' | 'Social' | 'Otro';
 export type EstadoEvento = 'Cotizacion' | 'Confirmado' | 'Ejecucion' | 'Finalizado' | 'Cancelado' | 'Reagendado';
 export type EstadoReserva = 'Pendiente' | 'Reservado' | 'Pagado' | 'Cancelado';
 export type EstadoContrato = 'Vigente' | 'Cancelado' | 'Reagendado';
 export type EstadoAlianza = 'Activo' | 'Inactivo';
+export type EstadoReservaProveedor = 'Pendiente' | 'Reservado' | 'Pagado' | 'Cancelado';
 
 export interface CreateEventoDTO {
   nombre_evento: string;
@@ -17,6 +20,7 @@ export interface CreateEventoDTO {
 export interface Evento extends CreateEventoDTO {
   id: string;
   created_at?: string;
+  estado: EstadoEvento;
 }
 
 export type EventoFormData = CreateEventoDTO;

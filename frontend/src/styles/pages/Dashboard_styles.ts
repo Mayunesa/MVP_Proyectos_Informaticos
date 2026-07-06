@@ -26,20 +26,21 @@ export const dashboardStyles: Record<string, CSSProperties> = {
     color: colors.textPrimary,
     fontFamily: typography.fontFamily,
   },
-  subheading: {
-    fontSize: typography.sizes.sm,
-    color: colors.textSecondary,
-    fontFamily: typography.fontFamily,
-    marginTop: spacing.xs,
-  },
-  kpiGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))',
-    gap: spacing.lg,
-  },
+  // subheading: {
+  //   fontSize: typography.sizes.sm,
+  //   color: colors.textSecondary,
+  //   fontFamily: typography.fontFamily,
+  //   marginTop: spacing.xs,
+  // },
+  // kpiGrid: {
+  //   display: 'grid',
+  //   gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))',
+  //   gap: spacing.lg,
+  // },
   sectionsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(18rem, 1fr))',
     gap: spacing.lg,
+    justifyContent: 'center',
   },
 };

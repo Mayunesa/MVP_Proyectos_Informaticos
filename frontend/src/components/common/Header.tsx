@@ -2,15 +2,13 @@
 
 import type { FC, MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, LayoutDashboard, PartyPopper, Building2, FileText, CalendarDays } from 'lucide-react';
+import { LayoutDashboard, Cake, Building2, CalendarDays } from 'lucide-react';
 import { headerStyles, navLinkHoverBg } from '../../styles/components/header_styles';
 
 const navItems = [
-  { path: '/', label: 'Inicio', icon: Home },
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/eventos', label: 'Eventos', icon: PartyPopper },
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/eventos', label: 'Eventos', icon: Cake },
   { path: '/proveedores', label: 'Proveedores', icon: Building2 },
-  { path: '/contratos', label: 'Contratos', icon: FileText },
   { path: '/calendario', label: 'Calendario', icon: CalendarDays },
 ];
 
@@ -27,7 +25,10 @@ const Header: FC = () => {
         <nav style={headerStyles.nav}>
           {navItems.map((item) => {
             const IconComponent = item.icon;
-            const isActive = location.pathname.startsWith(item.path);
+            //const isActive = location.pathname.startsWith(item.path);
+            const isActive = item.path === '/' 
+              ? location.pathname === '/' 
+              : location.pathname.startsWith(item.path);
 
             return (
               <Link
